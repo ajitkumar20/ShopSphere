@@ -1,7 +1,6 @@
 import "./App.css";
 import Footer from "./components/Footer/Footer";
 import HeroSection from "./components/HeroSection/HeroSection";
-import Navigation from "./components/Navigation/Navigation";
 import Category from "./components/Sections/Categories/Category";
 import NewArrival from "./components/Sections/NewArrival";
 import content from './data/content.json';
@@ -9,7 +8,6 @@ import content from './data/content.json';
 function App() {
   return (
     <>
-      <Navigation />
       <HeroSection />
       <NewArrival />
       {content?.pages?.shop?.sections && content?.pages?.shop?.sections?.map((item, index) => <Category key={item?.title+index} {...item} />)}

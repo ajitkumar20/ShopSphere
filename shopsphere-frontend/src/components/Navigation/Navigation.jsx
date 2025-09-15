@@ -2,31 +2,33 @@ import React from "react";
 import { Wishlist } from "../common/Wishlist";
 import { AccountIcon } from "../common/AccountIcon";
 import { CartIcon } from "../common/CartIcon";
+import { Link, NavLink } from "react-router-dom";
+import './Navigation.css';
 
 const Navigation = () => {
   return (
     <nav className="flex items-center py-6 px-16 justify-between gap-20 custom-nav">
       <div className="flex items-center gap-6">
         {/* Logo */}
-        <a className="text-3xl text-black font-bold gap-8" href="/">
+        <Link className="text-3xl text-black font-bold gap-8" to="/">
           ShopSphere
-        </a>
+        </Link>
       </div>
 
       <div className="flex flex-wrap items-center gap-10 flex-1">
         {/* Nav items */}
         <ul className="flex gap-14 text-gray-600 hover:text-black">
           <li className="">
-            <a href="/">Shop</a>
+            <NavLink to="/" className={({isActive})=> isActive ? 'active-link':''}>Shop</NavLink>
           </li>
           <li className="">
-            <a href="/men">Men</a>
+            <NavLink to="/men" className={({isActive})=> isActive ? 'active-link':''}>Men</NavLink>
           </li>
           <li className="">
-            <a href="/women">Women</a>
+            <NavLink to="/women" className={({isActive})=> isActive ? 'active-link':''}>Women</NavLink>
           </li>
           <li className="">
-            <a href="/kids">Kids</a>
+            <NavLink to="/kids" className={({isActive})=> isActive ? 'active-link':''}>Kids</NavLink>
           </li>
         </ul>
       </div>
@@ -56,7 +58,7 @@ const Navigation = () => {
         <ul className="flex items-center gap-8">
           <li><button><Wishlist /></button></li>
           <li><button><AccountIcon /></button></li>
-          <li><a href="/cart-items"><CartIcon /></a></li>
+          <li><Link to="/cart-items"><CartIcon /></Link></li>
         </ul>
       </div>
     </nav>
