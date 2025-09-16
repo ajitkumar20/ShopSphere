@@ -3,9 +3,9 @@ import React from "react";
 const Categories = ({ types }) => {
   return (
     <div>
-      {types?.map((type) => {
+      {types?.map((type, index) => {
         return (
-          <div className="flex items-center p-1">
+          <div key={index} className="flex items-center p-1">
             <input
               type="checkbox"
               name={type?.code}

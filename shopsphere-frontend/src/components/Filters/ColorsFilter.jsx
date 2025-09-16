@@ -33,9 +33,9 @@ const ColorsFilter = ({ colors }) => {
     <div className="flex flex-col mb-4">
       <p className="text-[16px] text-black mt-5 mb-5">Colors</p>
       <div className="flex flex-wrap px-2">
-        {colors?.map((item) => {
+        {colors?.map((item, index) => {
           return (
-            <div className="flex flex-col mr-2">
+            <div key={index} className="flex flex-col mr-2">
               <div
                 className="w-8 h-8 mr-4 border rounded-xl bg-orange-400 cursor-pointer hover:scale-110"
                 onClick={() => onClickDiv(item)}
