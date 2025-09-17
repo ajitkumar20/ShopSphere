@@ -14,9 +14,11 @@ const ProductListPage = ({ categoryType }) => {
     return categories?.find((category) => category.code === categoryType);
   }, [categoryType]);
 
-  const productListItems = useMemo(()=>{
-    return content?.products?.filter((product)=> product?.category_id === categoryContent?.id );
-  },[categoryContent]);
+  const productListItems = useMemo(() => {
+    return content?.products?.filter(
+      (product) => product?.category_id === categoryContent?.id
+    );
+  }, [categoryContent]);
 
   return (
     <div>
@@ -32,22 +34,22 @@ const ProductListPage = ({ categoryType }) => {
             <hr></hr>
             <Categories types={categoryContent?.types} />
           </div>
-            {/* Price */}
-            <PriceFilter />
-            <hr></hr>
-            {/* Colors */}
-            <ColorsFilter colors={categoryContent?.meta_data?.colors}/>
-            <hr></hr>
-            {/* Sizes */}
-            <SizeFilter sizes={categoryContent?.meta_data?.sizes}/>
+          {/* Price */}
+          <PriceFilter />
+          <hr></hr>
+          {/* Colors */}
+          <ColorsFilter colors={categoryContent?.meta_data?.colors} />
+          <hr></hr>
+          {/* Sizes */}
+          <SizeFilter sizes={categoryContent?.meta_data?.sizes} />
         </div>
 
         <div className="p-[15px]">
           {/* Products */}
           <p className="text-black text-lg">{categoryContent?.description}</p>
           <div className="pt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-2">
-            {productListItems?.map((item,index) => (
-              <ProductCard key={index} {...item}/>
+            {productListItems?.map((item, index) => (
+              <ProductCard key={index} {...item} />
             ))}
           </div>
         </div>
