@@ -2,7 +2,7 @@ package com.ajit.shopsphere.entities;
 
 import java.util.UUID;
 
-//import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,5 +39,6 @@ public class CategoryType {
 
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
+    @JsonIgnore
     private Category category;
 }

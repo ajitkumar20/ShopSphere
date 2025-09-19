@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,15 +59,17 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private java.util.Date updatedAt;
 
-     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductVariant> productVariants;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "categoryType_id", nullable = false)
+    @JsonIgnore
     private CategoryType categoryType;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
