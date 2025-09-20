@@ -48,6 +48,9 @@ public class Product {
     @Column(nullable = false)
     private String brand;
 
+    @Column
+    private Float rating;
+
     @Column(nullable = false)
     private boolean isNewArrival;
 

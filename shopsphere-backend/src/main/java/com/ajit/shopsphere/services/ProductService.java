@@ -1,12 +1,14 @@
 package com.ajit.shopsphere.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.ajit.shopsphere.dtos.ProductDto;
 import com.ajit.shopsphere.entities.Product;
 
 public interface ProductService {
-    
+
     public Product addProduct(ProductDto productDto);
-    public List<Product> getAllProducts();
+
+    public List<Product> getAllProducts(UUID categoryId, UUID typeId);
 }
