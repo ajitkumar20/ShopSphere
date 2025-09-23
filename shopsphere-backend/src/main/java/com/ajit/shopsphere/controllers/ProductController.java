@@ -1,5 +1,6 @@
 package com.ajit.shopsphere.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -7,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.ajit.shopsphere.dtos.ProductDto;
 import com.ajit.shopsphere.entities.Product;
@@ -24,19 +29,41 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    public ProductController(ProductService productService){
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
-    
+
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(@RequestParam(required = false,name = "categoryId",value = "categoryId") UUID categoryId, @RequestParam(required = false,name = "typeId",value = "typeId") UUID typeId){
-        List<Product> productList = productService.getAllProducts(categoryId, typeId);
+    public ResponseEntity<List<ProductDto>> getAllProducts(
+            @RequestParam(required = false, name = "categoryId", value = "categoryId") UUID categoryId,
+            @RequestParam(required = false, name = "typeId", value = "typeId") UUID typeId,
+            @RequestParam(required = false) String slug) {
+        List<ProductDto> productList = new ArrayList<>();
+
+        if (StringUtils.isNotBlank(slug)) {
+            ProductDto productDto = productService.getProductBySlug(slug);
+            productList.add(productDto);
+        } else {
+            productList = productService.getAllProducts(categoryId, typeId);
+        }
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable UUID id) {
+        ProductDto productDto = productService.getProductById(id);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto){
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
         Product product = productService.addProduct(productDto);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<Product> updateProductById(@RequestBody ProductDto productDto){
+        Product product = productService.updateProduct(productDto);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 }

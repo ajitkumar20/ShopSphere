@@ -1,13 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-const SizeFilter = ({ sizes, hideTitle }) => {
+const SizeFilter = ({ sizes, hideTitle, multi=true }) => {
   const [appliedSize, setAppliedSize] = useState([]);
   const onClickDiv = useCallback(
     (item) => {
       if (appliedSize.indexOf(item) > -1) {
         setAppliedSize(appliedSize?.filter((size) => size !== item));
       } else {
-        setAppliedSize([...appliedSize, item]);
+        if(multi){
+          setAppliedSize([...appliedSize, item]);
+        } else {
+          setAppliedSize([item]);
+        }
       }
     },
     [appliedSize, setAppliedSize]

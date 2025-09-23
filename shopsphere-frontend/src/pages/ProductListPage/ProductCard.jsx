@@ -11,10 +11,11 @@ const ProductCard = ({
   rating,
   brand,
   thumbnail,
+  slug,
 }) => {
   return (
     <div className="flex flex-col hover:scale-105 relative">
-      <Link to={`/product/${id}`}>
+      <Link to={`/product/${slug}`}>
         <img
           className={`h-[320px] w-[280px] border rounded-lg cursor-pointer object-cover block`}
           src={thumbnail}

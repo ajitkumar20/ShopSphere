@@ -3,7 +3,7 @@ import App from "./App.jsx";
 import ProductListPage from "./pages/ProductListPage/ProductListPage.jsx";
 import ShopApplicationWrapper from "./pages/ShopApplicationWrapper.jsx";
 import ProductDetails from "./pages/ProductDetailsPage/ProductDetails.jsx";
-import { loadProductById } from "./routes/products.js";
+import { loadProductBySlug } from "./routes/products.js";
 
 export const router = createBrowserRouter([
   {
@@ -23,8 +23,8 @@ export const router = createBrowserRouter([
         element: <ProductListPage categoryType={"MEN"} />,
       },
       {
-        path: "/product/:productId",
-        loader: loadProductById,
+        path: "/product/:slug",
+        loader: loadProductBySlug,
         element: <ProductDetails />,
       },
     ],

@@ -10,5 +10,7 @@ import com.ajit.shopsphere.entities.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpecificationExecutor<Product> {
+
+    Product findBySlug(String slug);
     
 }

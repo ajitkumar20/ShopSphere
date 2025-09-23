@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb/Breadcrumb";
 import content from "../../data/content.json";
@@ -11,8 +11,11 @@ import { ShippingIcon } from "../../components/common/ShippingIcon";
 import { ReturnIcon } from "../../components/common/ReturnIcon";
 import SectionHeading from "../../components/Sections/SectionHeading/SectionHeading";
 import ProductCard from "../ProductListPage/ProductCard";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { getAllProducts } from "../../api/fetchProducts";
 
-const categories = content?.categories;
+//const categories = content?.categories;
 
 const extraSections = [
   {
@@ -37,39 +40,62 @@ const ProductDetails = () => {
   const { product } = useLoaderData();
   const [image, setImage] = useState();
   const [breadCrumbLinks, setBreadCrumbLinks] = useState([]);
-
-  const similarProducts = useMemo(() => {
-    return content?.products?.filter((item) => (item?.type_id === product?.type_id && item?.id !== product?.id));
-  }, [product]);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cartState?.cart)
+  const [similarProduct,setSimilarProducts] = useState([]);
+  const categories = useSelector((state)=> state?.categoryState?.categories);
+  const [selecteSize,setSelectedSize] = useState('');
+  const [error,setError] = useState('');
 
   const productCategory = useMemo(() => {
     return categories?.find(
-      (category) => category?.id === product?.category_id
+      (category) => category?.id === product?.categoryId
     );
-  }, [product]);
+  }, [product, categories]);
 
   useEffect(() => {
-    setImage(product?.images[0]?.startsWith("http") ? product?.images[0] : product?.thumbnail)
+    getAllProducts(product?.categoryId, product?.categoryTypeId).then(res => {
+      const excludedProduct = res?.filter((item)=> item?.id !== product?.id);
+      setSimilarProducts(excludedProduct);
+    }).catch(() => {
+
+    })
+  }, [product?.categoryId, product?.categoryTypeId, product?.id]);
+
+  useEffect(() => {
+    setImage(product?.thumbnail);
     setBreadCrumbLinks([]);
     const arrayLinks = [
       { title: "Shop", path: "/" },
       {
         title: productCategory?.name,
-        path: productCategory?.path,
+        path: productCategory?.name,
       },
     ];
 
-    const productType = productCategory?.types?.find(
-      (item) => item?.type_id === product?.type_id
-    );
-    if (productType) {
-      arrayLinks.push({
+    const productType = productCategory?.categoryTypes?.find((item)=> item?.id === product?.categoryTypeId);
+    if(productType){
+      arrayLinks?.push({
         title: productType?.name,
         path: productType?.name,
-      });
+      })
     }
     setBreadCrumbLinks(arrayLinks);
   }, [productCategory, product]);
+
+  const addItemToCart = useCallback(() => {
+
+  }, []);
+
+  const colors = useMemo(() => {
+    const colorSet = _.uniq(_.map(product?.variants,'color'));
+    return colorSet;
+  }, [product]);
+
+  const sizes = useMemo(() => {
+    const sizeSet = _.uniq(_.map(product?.variants,'size'));
+    return sizeSet;
+  }, [product]);
 
   return (
     <>
@@ -80,14 +106,14 @@ const ProductDetails = () => {
             <div className="w-[100%] md:w-[20%] justify-center h-[40px] md:h-[420px]">
               {/* Stack Images */}
               <div className="flex flex-row md:flex-col justify-center h-full">
-                {product?.images?.map((item, index) => (
+                {product?.productResources?.map((item, index) => (
                   <button
-                    onClick={() => setImage(item)}
+                    onClick={() => setImage(item?.url)}
                     key={index}
                     className="rounded-lg w-fit p-2 mb-2"
                   >
                     <img
-                      src={item}
+                      src={item?.url}
                       className="h-[60px] w-[60px] rounded-lg bg-cover bg-center hover:scale-105 hover:border"
                       alt={"sample-" + index}
                     />
@@ -100,7 +126,7 @@ const ProductDetails = () => {
               <img
                 src={image}
                 className="h-full w-full max-h-[520px] border rounded-lg cursor-pointer object-cover"
-                alt={product?.title}
+                alt={product?.name}
               />
             </div>
           </div>
@@ -108,7 +134,7 @@ const ProductDetails = () => {
         <div className="w-[60%] px-10">
           {/* Product */}
           <Breadcrumb links={breadCrumbLinks} />
-          <p className="text-3xl pt-4">{product?.title}</p>
+          <p className="text-3xl pt-4">{product?.name}</p>
           <Rating rating={product?.rating} />
           {/* Price Tag */}
           <p className="text-xl font-bold py-2">${product?.price}</p>
@@ -125,11 +151,11 @@ const ProductDetails = () => {
             </div>
           </div>
           <div className="mt-2">
-            <SizeFilter sizes={product?.size} hideTitle />
+            <SizeFilter sizes={sizes} hideTitle multi={false} />
           </div>
           <div>
             <p className="text-lg bold">Colors Available</p>
-            <ProductColors colors={product?.color} />
+            <ProductColors colors={colors} />
           </div>
           <div className="flex pt-4">
             <button className="bg-black rounded-lg hover:bg-gray-700">
@@ -173,10 +199,10 @@ const ProductDetails = () => {
       <SectionHeading title={'Similar Products'}/>
       <div className="flex px-10">
         <div className="pt-4 grid grid-cols-1 lg:grid-cols-4 md:grid-cols-3 gap-8 px-2 pb-10">
-            {similarProducts?.map((item, index) => (
+            {similarProduct?.map((item, index) => (
               <ProductCard key={index} {...item} />
             ))}
-            {!similarProducts?.length && <p>No Products Found!</p>}
+            {!similarProduct?.length && <p>No Products Found!</p>}
           </div>
       </div>
     </>
