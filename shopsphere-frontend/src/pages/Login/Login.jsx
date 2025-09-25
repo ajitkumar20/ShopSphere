@@ -19,7 +19,7 @@ const Login = () => {
   const onSubmit = useCallback((e) => {
     e.preventDefault();
     setError("");
-    console.log("Values ", values);
+    //console.log("Values ", values);
     dispatch(setLoading(true));
     loginAPI(values).then(res => {
       if(res?.token){
