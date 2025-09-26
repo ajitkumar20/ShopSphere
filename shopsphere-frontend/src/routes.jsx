@@ -7,6 +7,7 @@ import { loadProductBySlug } from "./routes/products.js";
 import AuthenticationWrapper from "./pages/AuthenticationWrapper.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Register from "./pages/Register/Register.jsx";
+import OAuth2LoginCallback from "./pages/OAuth2LoginCallback.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -38,12 +39,16 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <Login />
+        element: <Login />,
       },
       {
         path: "register",
-        element: <Register />
+        element: <Register />,
       },
     ],
+  },
+  {
+    path: "/oauth2/callback",
+    element: <OAuth2LoginCallback />,
   },
 ]);
