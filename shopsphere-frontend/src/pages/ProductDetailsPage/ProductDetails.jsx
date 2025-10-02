@@ -14,6 +14,7 @@ import ProductCard from "../ProductListPage/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
 import { getAllProducts } from "../../api/fetchProducts";
+import { addItemToCartAction } from "../../store/actions/cartAction";
 
 //const categories = content?.categories;
 
@@ -44,7 +45,7 @@ const ProductDetails = () => {
   const cartItems = useSelector((state) => state.cartState?.cart)
   const [similarProduct,setSimilarProducts] = useState([]);
   const categories = useSelector((state)=> state?.categoryState?.categories);
-  const [selecteSize,setSelectedSize] = useState('');
+  const [selecteSize,setSelectedSize] = useState("");
   const [error,setError] = useState('');
 
   const productCategory = useMemo(() => {
@@ -84,8 +85,34 @@ const ProductDetails = () => {
   }, [productCategory, product]);
 
   const addItemToCart = useCallback(() => {
+    console.log("size ",selecteSize);
 
-  }, []);
+    if(!selecteSize){
+      setError('Please select size');
+    }else{
+      const selectedVariant = product?.variants?.filter((variant) => variant?.size === selecteSize)?.[0];
+      console.log("selected ",selectedVariant);
+      if(selectedVariant?.stockQuantity > 0){
+        dispatch(addItemToCartAction({
+          productId:product?.id,
+          thumbnail:product?.thumbnail,
+          name: product?.name,
+          variant:selectedVariant,
+          quantity:1,
+          subTotal: product?.price,
+          price:product?.price,
+        }))
+      }else{
+        setError("Out of Stock");
+      }
+    }
+  }, [selecteSize, dispatch, product]);
+
+  useEffect(()=>{
+    if(selecteSize){
+      setError("");
+    }
+  },[selecteSize]);
 
   const colors = useMemo(() => {
     const colorSet = _.uniq(_.map(product?.variants,'color'));
@@ -151,14 +178,16 @@ const ProductDetails = () => {
             </div>
           </div>
           <div className="mt-2">
-            <SizeFilter sizes={sizes} hideTitle multi={false} />
+            <SizeFilter onChange={(values) => {
+              setSelectedSize(values?.[0] ?? "")
+            }} sizes={sizes} hideTitle multi={false} />
           </div>
           <div>
             <p className="text-lg bold">Colors Available</p>
             <ProductColors colors={colors} />
           </div>
           <div className="flex pt-4">
-            <button className="bg-black rounded-lg hover:bg-gray-700">
+            <button onClick={addItemToCart} className="bg-black rounded-lg hover:bg-gray-700">
               <div className="flex h-[42px] rounded-lg w-[150px] px-2 items-center justify-center bg-black text-white hover:bg-gray-700">
                 <svg
                   width="17"
@@ -179,6 +208,7 @@ const ProductDetails = () => {
               </div>
             </button>
           </div>
+          {error && <p className='text-lg text-red-600'>{error}</p>}
           <div className="grid md:grid-cols-2 gap-4 pt-4">
             {/* Icons for products */}
             {extraSections?.map((section, index) => (

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-const SizeFilter = ({ sizes, hideTitle, multi=true }) => {
+const SizeFilter = ({ sizes, hideTitle, multi=true, onChange }) => {
   const [appliedSize, setAppliedSize] = useState([]);
   const onClickDiv = useCallback(
     (item) => {
@@ -14,12 +14,12 @@ const SizeFilter = ({ sizes, hideTitle, multi=true }) => {
         }
       }
     },
-    [appliedSize, setAppliedSize]
+    [appliedSize, multi]
   );
 
-  //   useEffect(()=>{
-  //     onChange && onChange(appliedSize);
-  //   },[appliedSize, onChange])
+    useEffect(()=>{
+      onChange && onChange(appliedSize);
+    },[appliedSize, onChange])
 
   return (
     <div className={`flex flex-col ${hideTitle ? "" : "mb-4"}`}>

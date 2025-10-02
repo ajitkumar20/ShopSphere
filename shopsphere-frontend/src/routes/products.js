@@ -7,7 +7,7 @@ export const loadProductBySlug = async ({ params }) => {
         store.dispatch(setLoading(true));
         const product = await getProductBySlug(params?.slug);
         store.dispatch(setLoading(false));
-        console.log("product",product);
+        //console.log("product",product);
         return {product};
     } catch(err) {
 

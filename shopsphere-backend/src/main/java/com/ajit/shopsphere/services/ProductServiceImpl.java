@@ -3,6 +3,7 @@ package com.ajit.shopsphere.services;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(productMapper.mapToProductEntity(productDto));
     }
 
-    
+    @Override
+    public Product fetchProductById(UUID id) throws Exception {
+        return productRepository.findById(id).orElseThrow(BadRequestException::new);
+    }
 
 }

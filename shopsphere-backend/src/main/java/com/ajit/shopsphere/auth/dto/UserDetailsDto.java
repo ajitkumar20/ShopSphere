@@ -1,6 +1,9 @@
 package com.ajit.shopsphere.auth.dto;
 
+import java.util.List;
 import java.util.UUID;
+
+import com.ajit.shopsphere.entities.Address;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,4 +22,5 @@ public class UserDetailsDto {
     private String phoneNumber;
     private String email;
     private Object authorityList;
+    private List<Address> addressList;
 }
