@@ -40,9 +40,10 @@ const Checkout = () => {
           <p className='font-bold'>Delivery address</p>
           {userInfo?.addressList &&
             <div>
-              <p>{userInfo?.addressList?.[0]?.name}</p>
+              <p className="font-semibold mb-1">{userInfo?.addressList?.[0]?.name}</p>
               <p>{userInfo?.addressList?.[0]?.street}</p>
               <p>{userInfo?.addressList?.[0]?.city},{userInfo?.addressList?.[0]?.state} {userInfo?.addressList?.[0]?.zipCode}</p>
+              <p className="mt-1">{userInfo?.addressList?.[0]?.phoneNumber}</p>
             </div>
           }
         </div>

@@ -20,12 +20,6 @@ const ConfirmPayment = () => {
 
     if (redirectStatus === "succeeded") {
       dispatch(setLoading(true));
-
-      //console.log("Client Secret: ", clientSecret);
-      //console.log("Redirect Status: ", redirectStatus);
-      //console.log("PaymentIntent Id: ", paymentIntent);
-
-      dispatch(setLoading(true));
       //dispatch(clearCart());
       confirmPaymentAPI({
         paymentIntent: paymentIntent,

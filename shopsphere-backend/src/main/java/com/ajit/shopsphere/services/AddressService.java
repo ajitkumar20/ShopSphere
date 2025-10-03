@@ -1,6 +1,7 @@
 package com.ajit.shopsphere.services;
 
 import java.security.Principal;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,5 +34,9 @@ public class AddressService {
                 .build();
 
         return addressRepository.save(address);
+    }
+
+    public void deleteAddress(UUID id) {
+        addressRepository.deleteById(id);
     }
 }
