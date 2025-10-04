@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import com.ajit.shopsphere.auth.dto.OrderResponse;
 import com.ajit.shopsphere.auth.entities.User;
+import com.ajit.shopsphere.dtos.OrderDetails;
+import com.ajit.shopsphere.dtos.OrderItemDetails;
 import com.ajit.shopsphere.dtos.OrderRequest;
 import com.ajit.shopsphere.entities.Address;
 import com.ajit.shopsphere.entities.Order;
@@ -177,6 +179,47 @@ public class OrderService {
 
         }catch(Exception e){
             throw new RuntimeException("Failed to update payment status", e);
+        }
+    }
+
+    public List<OrderDetails> getOrdersByUser(String name) {
+        User user = (User) userDetailsService.loadUserByUsername(name);
+        List<Order> orders = orderRepository.findByUser(user);
+        return orders.stream().map(order -> {
+            return OrderDetails.builder()
+                    .id(order.getId())
+                    .orderDate(order.getOrderDate())
+                    .orderStatus(order.getOrderStatus())
+                    .shipmentNumber(order.getShipmentTrackingNumber())
+                    .address(order.getAddress())
+                    .totalAmount(order.getTotalAmount())
+                    .orderItemList(getItemDetails(order.getOrderItemList()))
+                    .expectedDeliveryDate(order.getExpectedDeliveryDate())
+                    .build();
+        }).toList();
+    }
+
+    private List<OrderItemDetails> getItemDetails(List<OrderItem> orderItemList){
+        return orderItemList.stream().map(orderItem -> {
+            return OrderItemDetails.builder()
+                    .id(orderItem.getId())
+                    .itemPrice(orderItem.getItemPrice())
+                    .product(orderItem.getProduct())
+                    .productVariantId(orderItem.getProductVariantId())
+                    .quantity(orderItem.getQuantity())
+                    .build();
+        }).toList();
+    }
+
+    public void cancelOrder(UUID id, Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        Order order = orderRepository.findById(id).get();
+        if(order != null && order.getUser().getId().equals(user.getId())){
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            //logic to refund amount
+            orderRepository.save(order);
+        }else{
+            new RuntimeException("Invalid request");
         }
     }
 }
